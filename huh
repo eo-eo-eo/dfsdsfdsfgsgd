@@ -1,0 +1,83 @@
+local filename = "stats_loop.txt"
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+
+local template = [[
+local filename = "stats_loop.txt"
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+
+local LocalPlayer = Players.LocalPlayer
+local Remote = ReplicatedStorage:WaitForChild("starter")
+local StatsFolder = LocalPlayer:WaitForChild("stats")
+
+local Names = {}
+for _, v in ipairs(StatsFolder:GetChildren()) do
+    table.insert(Names, v.Name)
+end
+
+table.sort(Names)
+
+local Index = tonumber(readfile(filename)) or 1
+
+local t = tick()
+while tick() - t < 8 do
+    Remote:FireServer(Names[Index])
+
+    Index = Index + 1
+    if Index > #Names then
+        Index = 1
+    end
+
+    task.wait(0.1)
+end
+
+writefile(filename, tostring(Index))
+
+queue_on_teleport(readfile("stats_loop.txt"))
+TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+]]
+
+-- FIRST RUN (no firing)
+if not isfile(filename) then
+    writefile(filename, "1")
+
+    queue_on_teleport(template)
+    TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+    return
+end
+
+-- NORMAL EXECUTION
+local LocalPlayer = Players.LocalPlayer
+local Remote = ReplicatedStorage:WaitForChild("starter")
+local StatsFolder = LocalPlayer:WaitForChild("stats")
+
+local Names = {}
+for _, v in ipairs(StatsFolder:GetChildren()) do
+    table.insert(Names, v.Name)
+end
+
+table.sort(Names)
+
+local Index = tonumber(readfile(filename)) or 1
+
+local t = tick()
+while tick() - t < 8 do
+    Remote:FireServer(Names[Index])
+
+    Index = Index + 1
+    if Index > #Names then
+        Index = 1
+    end
+
+    task.wait(0.1)
+end
+
+writefile(filename, tostring(Index))
+
+queue_on_teleport(template)
+TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
