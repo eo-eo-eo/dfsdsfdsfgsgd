@@ -47,7 +47,7 @@ end
 writefile(filename, tostring(Index))
 
 queue_on_teleport(readfile(filename) and [[
-loadstring(game:HttpGet("https://pastebin.com/raw/YOUR_SCRIPT_ID"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/eo-eo-eo/dfsdsfdsfgsgd/refs/heads/main/last"))()
 ]] or "")
 
 TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
